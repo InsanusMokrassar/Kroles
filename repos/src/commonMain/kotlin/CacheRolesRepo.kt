@@ -133,7 +133,7 @@ class CacheRolesRepo(
         onIdentifierRemovedFlow.subscribeSafelyWithoutExceptions(scope) {
             val subject = BaseRoleSubject.Direct(it)
             getDirectRoles(subject).forEach { role ->
-                exclude(subject, role)
+                excludeDirect(subject, role)
             }
         }
     }
@@ -156,29 +156,25 @@ class CacheRolesRepo(
         }
     }
 
-    override suspend fun getCustomRoles(pagination: Pagination, reversed: Boolean): PaginationResult<BaseRole> {
+    override suspend fun getAllRolesByPagination(pagination: Pagination, reversed: Boolean): PaginationResult<BaseRole> {
         return locker.withReadAcquire {
             rolesSubjects.keys
         }.paginate(pagination, reversed)
     }
 
-    override suspend fun getCustomRoles(subject: BaseRoleSubject): List<BaseRole> {
+    override suspend fun getAllRoles(subject: BaseRoleSubject): List<BaseRole> {
         return locker.withReadAcquire {
             rolesBySubjects[subject] ?: emptyList()
         }
     }
 
-    override suspend fun getSubjects(
+    override suspend fun getAllSubjectsByPagination(
         pagination: Pagination,
         reversed: Boolean
     ): PaginationResult<BaseRoleSubject> {
         return locker.withReadAcquire {
             directRolesBySubjects.keys.paginate(pagination, reversed)
         }
-    }
-
-    override suspend fun getAllRoles(subject: BaseRoleSubject): List<BaseRole> {
-        return getCustomRoles(subject)
     }
 
     override suspend fun contains(subject: BaseRoleSubject, role: BaseRole): Boolean {
@@ -189,33 +185,33 @@ class CacheRolesRepo(
         return getAllRoles(subject).any { it in roles }
     }
 
-    override suspend fun include(subject: BaseRoleSubject, role: BaseRole): Boolean {
+    override suspend fun includeDirect(subject: BaseRoleSubject, role: BaseRole): Boolean {
         return locker.withWriteLock {
-            originalRepo.include(subject, role)
+            originalRepo.includeDirect(subject, role)
         }
     }
 
-    override suspend fun include(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
+    override suspend fun includeDirect(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
         return locker.withWriteLock {
-            originalRepo.include(subject, roles)
+            originalRepo.includeDirect(subject, roles)
         }
     }
 
-    override suspend fun exclude(subject: BaseRoleSubject, role: BaseRole): Boolean {
+    override suspend fun excludeDirect(subject: BaseRoleSubject, role: BaseRole): Boolean {
         return locker.withWriteLock {
-            originalRepo.exclude(subject, role)
+            originalRepo.excludeDirect(subject, role)
         }
     }
 
-    override suspend fun exclude(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
+    override suspend fun excludeDirect(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
         return locker.withWriteLock {
-            originalRepo.exclude(subject, roles)
+            originalRepo.excludeDirect(subject, roles)
         }
     }
 
-    override suspend fun modify(subject: BaseRoleSubject, toExclude: List<BaseRole>, toInclude: List<BaseRole>): Boolean {
+    override suspend fun modifyDirect(subject: BaseRoleSubject, toExclude: List<BaseRole>, toInclude: List<BaseRole>): Boolean {
         return locker.withWriteLock {
-            originalRepo.modify(subject, toExclude, toInclude)
+            originalRepo.modifyDirect(subject, toExclude, toInclude)
         }
     }
 
@@ -231,10 +227,12 @@ class CacheRolesRepo(
         }
     }
 
-    override suspend fun getAllSubjects(subject: BaseRoleSubject): Set<BaseRoleSubject> {
-        return when (subject) {
-            is BaseRoleSubject.Direct -> emptySet()
-            is BaseRoleSubject.OtherRole -> rolesSubjects[subject.role] ?.toSet() ?: emptySet()
+    override suspend fun getAllSubjectsByPagination(subject: BaseRoleSubject): Set<BaseRoleSubject> {
+        return locker.withReadAcquire {
+            when (subject) {
+                is BaseRoleSubject.Direct -> emptySet()
+                is BaseRoleSubject.OtherRole -> rolesSubjects[subject.role] ?.toSet() ?: emptySet()
+            }
         }
     }
 

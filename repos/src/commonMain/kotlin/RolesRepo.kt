@@ -40,7 +40,7 @@ interface ReadRolesRepo {
             }.distinct()
         }
     }
-    suspend fun getAllSubjects(subject: BaseRoleSubject): Set<BaseRoleSubject> {
+    suspend fun getAllSubjectsByPagination(subject: BaseRoleSubject): Set<BaseRoleSubject> {
         val visitedSubjects = mutableSetOf<BaseRoleSubject>()
         val subjectsToVisit = mutableListOf<BaseRoleSubject>(subject)
         while (subjectsToVisit.isNotEmpty()) {
@@ -58,14 +58,11 @@ interface ReadRolesRepo {
         }
         return visitedSubjects.toSet()
     }
-    suspend fun getCustomRoles(pagination: Pagination, reversed: Boolean = false): PaginationResult<BaseRole>
-    suspend fun getAllCustomRoles() = getAllByWithNextPaging {
-        getCustomRoles(it)
+    suspend fun getAllRolesByPagination(pagination: Pagination, reversed: Boolean = false): PaginationResult<BaseRole>
+    suspend fun getAllRoles() = getAllByWithNextPaging {
+        getAllRolesByPagination(it)
     }
-    suspend fun getCustomRoles(subject: BaseRoleSubject): List<BaseRole> {
-        return getAllRoles(subject).filterIsInstance<BaseRole>()
-    }
-    suspend fun getSubjects(pagination: Pagination, reversed: Boolean = false): PaginationResult<BaseRoleSubject>
+    suspend fun getAllSubjectsByPagination(pagination: Pagination, reversed: Boolean = false): PaginationResult<BaseRoleSubject>
     suspend fun contains(subject: BaseRoleSubject, role: BaseRole): Boolean
     suspend fun containsAny(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean
 }
@@ -77,23 +74,23 @@ interface WriteRolesRepo {
     val roleCreated: Flow<BaseRole>
     val roleRemoved: Flow<BaseRole>
 
-    suspend fun include(subject: BaseRoleSubject, role: BaseRole): Boolean
-    suspend fun exclude(subject: BaseRoleSubject, role: BaseRole): Boolean
+    suspend fun includeDirect(subject: BaseRoleSubject, role: BaseRole): Boolean
+    suspend fun excludeDirect(subject: BaseRoleSubject, role: BaseRole): Boolean
     suspend fun createRole(newRole: BaseRole): Boolean
     suspend fun removeRole(role: BaseRole): Boolean
 
-    suspend fun include(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
+    suspend fun includeDirect(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
         return roles.map {
-            include(subject, it)
+            includeDirect(subject, it)
         }.all { it }
     }
-    suspend fun exclude(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
+    suspend fun excludeDirect(subject: BaseRoleSubject, roles: List<BaseRole>): Boolean {
         return roles.map {
-            exclude(subject, it)
+            excludeDirect(subject, it)
         }.all { it }
     }
-    suspend fun modify(subject: BaseRoleSubject, toExclude: List<BaseRole>, toInclude: List<BaseRole>): Boolean {
-        return exclude(subject, toExclude) && include(subject, toInclude)
+    suspend fun modifyDirect(subject: BaseRoleSubject, toExclude: List<BaseRole>, toInclude: List<BaseRole>): Boolean {
+        return excludeDirect(subject, toExclude) && includeDirect(subject, toInclude)
     }
 }
 

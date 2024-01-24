@@ -7,4 +7,8 @@ import kotlin.jvm.JvmInline
 @JvmInline
 value class BaseRole(
     val plain: String
-)
+) {
+    companion object {
+        val EMPTY = BaseRole("")
+    }
+}

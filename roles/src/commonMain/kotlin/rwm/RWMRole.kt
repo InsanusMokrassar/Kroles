@@ -47,11 +47,21 @@ value class RWMRole internal constructor(
     constructor(
         prefix: String,
         rights: AccessRights,
-        identifier: String?
+        identifier: Identifier? = null
     ) : this(
         BaseRole(
-            "$prefix.${rights}${identifier?.let { ".$it" } ?: ""}"
+            "$prefix.${rights}${identifier ?.let { ".$it" } ?: ""}"
         )
+    )
+
+    constructor(
+        prefix: String,
+        rights: AccessRights,
+        identifier: String
+    ) : this(
+        prefix,
+        rights,
+        Identifier(identifier)
     )
 
     constructor(
@@ -81,6 +91,26 @@ value class RWMRole internal constructor(
 
         override fun compareTo(other: Identifier): Int = string.compareTo(other.string)
 
+        operator fun plus(other: AccessRights) = AccessRights(
+            read = r || other.r,
+            write = w || other.w,
+            manage = m || other.m,
+        )
+
+        operator fun times(other: AccessRights) = AccessRights(
+            read = r && other.r,
+            write = w && other.w,
+            manage = m && other.m,
+        )
+
+        operator fun minus(other: AccessRights) = AccessRights(
+            read = r && !other.r,
+            write = w && !other.w,
+            manage = m && !other.m,
+        )
+
+        fun isEmpty() = !r && !w && !m
+
         operator fun contains(rights: AccessRights) = !r || rights.r && !w || rights.w && !m || rights.m
         override fun toString(): String {
             return string
@@ -91,6 +121,10 @@ value class RWMRole internal constructor(
     @JvmInline
     value class Identifier internal constructor(val string: String) : Comparable<Identifier> {
         override fun compareTo(other: Identifier): Int = string.compareTo(other.string)
+
+        override fun toString(): String {
+            return string
+        }
     }
 
     companion object {
