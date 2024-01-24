@@ -3,6 +3,9 @@ rootProject.name = 'kroles'
 String[] includes = [
     ":roles",
     ":repos",
+    ":repos:ktor",
+    ":repos:ktor:client",
+    ":repos:ktor:server",
 ]
 
 

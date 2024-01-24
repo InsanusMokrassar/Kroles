@@ -12,6 +12,8 @@ typealias BaseRolSubjectDirectIdentifier = String
 
 @Serializable
 sealed interface BaseRoleSubject {
+    val rawValue: String
+
     companion object {
         operator fun invoke(identifier: BaseRolSubjectDirectIdentifier) = Direct(identifier)
         operator fun invoke(role: BaseRole) = OtherRole(role)
@@ -25,10 +27,10 @@ sealed interface BaseRoleSubject {
     @Serializable
     @SerialName("RoleSubject")
     @JvmInline
-    value class OtherRole(val role: BaseRole) : BaseRoleSubject
+    value class OtherRole(val role: BaseRole) : BaseRoleSubject { override val rawValue: String get() = role.plain }
 
     @Serializable
     @SerialName("CommonSubject")
     @JvmInline
-    value class Direct(val identifier: BaseRolSubjectDirectIdentifier) : BaseRoleSubject
+    value class Direct(val identifier: BaseRolSubjectDirectIdentifier) : BaseRoleSubject { override val rawValue: String get() = identifier }
 }

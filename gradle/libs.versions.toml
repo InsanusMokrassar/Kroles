@@ -33,6 +33,8 @@ microutils-repos-common = { module = "dev.inmo:micro_utils.repos.common", versio
 microutils-repos-cache = { module = "dev.inmo:micro_utils.repos.cache", version.ref = "microutils" }
 microutils-repos-inmemory = { module = "dev.inmo:micro_utils.repos.inmemory", version.ref = "microutils" }
 microutils-repos-exposed = { module = "dev.inmo:micro_utils.repos.exposed", version.ref = "microutils" }
+microutils-repos-ktor-client = { module = "dev.inmo:micro_utils.repos.ktor.client", version.ref = "microutils" }
+microutils-repos-ktor-server = { module = "dev.inmo:micro_utils.repos.ktor.server", version.ref = "microutils" }
 
 kslog = { module = "dev.inmo:kslog", version.ref = "kslog" }
 
