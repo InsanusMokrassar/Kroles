@@ -2,7 +2,9 @@ package dev.inmo.kroles.roles.rwm
 
 import dev.inmo.kroles.roles.BaseRole
 import kotlinx.serialization.Serializable
+import kotlin.js.JsName
 import kotlin.jvm.JvmInline
+import kotlin.jvm.JvmName
 
 /**
  * Role with form "prefix.rmw.identifier", where "prefix" is an identifier of role, r - read access, w - write access,
@@ -43,36 +45,6 @@ value class RWMRole internal constructor(
                 }
             }.removePrefix(".").takeIf { it.isNotBlank() } ?.let(::Identifier)
         }
-
-    constructor(
-        prefix: String,
-        rights: AccessRights,
-        identifier: Identifier? = null
-    ) : this(
-        BaseRole(
-            "$prefix.${rights}${identifier ?.let { ".$it" } ?: ""}"
-        )
-    )
-
-    constructor(
-        prefix: String,
-        rights: AccessRights,
-        identifier: String
-    ) : this(
-        prefix,
-        rights,
-        Identifier(identifier)
-    )
-
-    constructor(
-        prefix: String,
-        read: Boolean,
-        manage: Boolean,
-        write: Boolean,
-        identifier: String?
-    ) : this(
-        prefix, AccessRights(read, manage, write), identifier
-    )
 
     @Serializable
     @JvmInline
@@ -173,5 +145,48 @@ value class RWMRole internal constructor(
         operator fun invoke(
             role: String
         ) = BaseRole(role).rwmRoleOrNull()
+
+
+        operator fun invoke(
+            prefix: String,
+            rights: AccessRights,
+            identifier: Identifier? = null
+        ): RWMRole = RWMRole(
+            BaseRole(
+                "$prefix.${rights}${identifier ?.let { ".$it" } ?: ""}"
+            )
+        )
+
+        @JvmName("invokeWithStringIdentifier")
+        operator fun invoke(
+            prefix: String,
+            rights: AccessRights,
+            identifier: String
+        ): RWMRole = invoke(
+            prefix,
+            rights,
+            Identifier(identifier)
+        )
+
+        operator fun invoke(
+            prefix: String,
+            read: Boolean,
+            manage: Boolean,
+            write: Boolean,
+            identifier: Identifier? = null
+        ): RWMRole = invoke(
+            prefix, AccessRights(read, manage, write), identifier
+        )
+
+        @JvmName("invokeWithStringIdentifier")
+        operator fun invoke(
+            prefix: String,
+            read: Boolean,
+            manage: Boolean,
+            write: Boolean,
+            identifier: String
+        ): RWMRole = invoke(
+            prefix, read, manage, write, Identifier(identifier)
+        )
     }
 }
