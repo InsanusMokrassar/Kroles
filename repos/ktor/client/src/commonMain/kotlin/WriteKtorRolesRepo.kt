@@ -46,19 +46,19 @@ class WriteKtorRolesRepo(
     )
 
     override val roleIncluded: Flow<Pair<BaseRoleSubject, BaseRole>> = client.createStandardWebsocketFlow(
-        buildStandardUrl(rootPath, RolesKtorConstants.IncludedDirectsFlowPathPart)
+        buildStandardUrl(rootPath, RolesKtorConstants.RoleIncludedFlowPathPart)
     )
 
     override val roleExcluded: Flow<Pair<BaseRoleSubject, BaseRole>> = client.createStandardWebsocketFlow(
-        buildStandardUrl(rootPath, RolesKtorConstants.ExcludedDirectsFlowPathPart)
+        buildStandardUrl(rootPath, RolesKtorConstants.RoleExcludedFlowPathPart)
     )
 
     override val roleCreated: Flow<BaseRole> = client.createStandardWebsocketFlow(
-        buildStandardUrl(rootPath, RolesKtorConstants.CreatedRoleFlowPathPart)
+        buildStandardUrl(rootPath, RolesKtorConstants.RoleCreatedFlowPathPart)
     )
 
     override val roleRemoved: Flow<BaseRole> = client.createStandardWebsocketFlow(
-        buildStandardUrl(rootPath, RolesKtorConstants.RemovedRoleFlowPathPart)
+        buildStandardUrl(rootPath, RolesKtorConstants.RoleRemovedFlowPathPart)
     )
 
     override suspend fun includeDirect(
@@ -100,7 +100,8 @@ class WriteKtorRolesRepo(
     ): Boolean = client.post(excludeDirectsFullUrl) {
         setBody(
             RolesKtorConstants.IncludesExcludesWrapper(
-                subject, roles
+                subject = subject,
+                roles = roles
             )
         )
     }.body()

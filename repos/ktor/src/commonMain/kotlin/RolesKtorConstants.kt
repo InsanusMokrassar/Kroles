@@ -32,7 +32,6 @@ object RolesKtorConstants {
     const val RoleQueryParameterName = "role"
     const val SubjectIdentifierQueryParameterName = "subject_identifier"
     const val SubjectRoleQueryParameterName = "subject_role"
-    const val RoleSubjectQueryParameterName = "subject"
 
     const val GetDirectSubjectsPathPart = "getSubjectsByRole"
     const val GetDirectRolesPathPart = "getDirectSubjectRoles"
@@ -50,9 +49,9 @@ object RolesKtorConstants {
     const val ModifyDirectPathPart = "modifyDirect"
     const val CreateRolePathPart = "createRole"
     const val RemoveRolePathPart = "removeRole"
-    const val IncludedDirectsFlowPathPart = "includedDirectsFlow"
-    const val ExcludedDirectsFlowPathPart = "excludedDirectsFlow"
-    const val CreatedRoleFlowPathPart = "createdRoleFlow"
-    const val RemovedRoleFlowPathPart = "removedRoleFlow"
+    const val RoleIncludedFlowPathPart = "roleIncludedFlow"
+    const val RoleExcludedFlowPathPart = "roleExcludedFlow"
+    const val RoleCreatedFlowPathPart = "roleCreatedFlow"
+    const val RoleRemovedFlowPathPart = "roleRemovedFlow"
 
 }

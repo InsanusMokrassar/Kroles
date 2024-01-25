@@ -9,7 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 
-internal suspend inline fun PipelineContext<Unit, ApplicationCall>.subjectOrError(): BaseRoleSubject? {
+internal suspend inline fun PipelineContext<Unit, ApplicationCall>.subjectOrRespondError(): BaseRoleSubject? {
     val role = call.getQueryParameter(RolesKtorConstants.SubjectRoleQueryParameterName) ?.let(::BaseRole) ?.let(
         BaseRoleSubject::OtherRole
     )
