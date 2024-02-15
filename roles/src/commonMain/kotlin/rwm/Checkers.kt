@@ -25,8 +25,8 @@ suspend fun List<BaseRole>.isIdentifierAllowed(
     prefix: String,
     identifier: RWMRole.Identifier,
     read: Boolean = false,
-    manage: Boolean = false,
-    write: Boolean = false
+    write: Boolean = false,
+    manage: Boolean = false
 ): Boolean {
     return isIdentifierAllowed(prefix, identifier, RightsChecker(read, write, manage))
 }
@@ -50,8 +50,8 @@ suspend fun List<BaseRole>.isAccessAllowed(
 suspend fun List<BaseRole>.isAccessAllowed(
     prefix: String,
     read: Boolean = false,
-    manage: Boolean = false,
-    write: Boolean = false
+    write: Boolean = false,
+    manage: Boolean = false
 ): Boolean {
     return isAccessAllowed(prefix, RightsChecker(read, write, manage))
 }
@@ -74,8 +74,8 @@ suspend fun List<BaseRole>.getAllowedIdentifiers(
 suspend fun List<BaseRole>.getAllowedIdentifiers(
     prefix: String,
     read: Boolean = false,
-    manage: Boolean = false,
     write: Boolean = false,
+    manage: Boolean = false,
 ): List<RWMRole.Identifier>? = getAllowedIdentifiers(prefix, RightsChecker(read, write, manage))
 
 
@@ -86,16 +86,16 @@ suspend fun List<BaseRole>.includesBaseRole(role: BaseRole): Boolean {
             isAccessAllowed(
                 prefix = it.prefix,
                 read = it.readAccess,
-                manage = it.manageAccess,
-                write = it.writeAccess
+                write = it.writeAccess,
+                manage = it.manageAccess
             )
         } else {
             isIdentifierAllowed(
                 prefix = it.prefix,
                 identifier = identifier,
                 read = it.readAccess,
-                manage = it.manageAccess,
-                write = it.writeAccess
+                write = it.writeAccess,
+                manage = it.manageAccess
             )
         }
     } ?: contains(role)
