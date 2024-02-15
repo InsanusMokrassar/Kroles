@@ -1,5 +1,5 @@
 {
-   "module_path": "feature/sample",
-   "module_package": "{{.module_path.replace(\"/\", \".\")}}",
-   "full_module_package": "project_group.{{.module_path.replace(\"/\", \".\")}}"
+   "module_name": "sample",
+   "module_package": "{{.module_name}}",
+   "full_module_package": "dev.inmo.kroles.{{.module_package}}"
 }

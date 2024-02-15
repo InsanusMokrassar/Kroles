@@ -20,8 +20,9 @@ allprojects {
         mavenLocal()
         mavenCentral()
         google()
+        maven { url "https://nexus.inmo.dev/repository/maven-releases/" }
     }
 }
 
 apply from: "./extensions.gradle"
-// apply from: "./github_release.gradle"
+apply from: "./github_release.gradle"

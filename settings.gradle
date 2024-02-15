@@ -1,7 +1,11 @@
-rootProject.name = 'project_name'
+rootProject.name = 'kroles'
 
 String[] includes = [
-    ":lib"
+    ":roles",
+    ":repos",
+    ":repos:ktor",
+    ":repos:ktor:client",
+    ":repos:ktor:server",
 ]
 
 
