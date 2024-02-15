@@ -30,6 +30,11 @@ publishing {
 
             licenses {
                 
+                    license {
+                        name = "MIT License"
+                        url = "https://github.com/InsanusMokrassar/kroles/blob/master/LICENSE"
+                    }
+                
             }
         }
         repositories {
